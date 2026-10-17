@@ -1,0 +1,1298 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f8f4f0">
+    <link rel="icon" type="image/png" href="assets/rostera-icon.png">
+    <title>Rostera — A garden of good work</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --page: #f8f6f3;
+        --surface: #fffefa;
+        --surface-soft: #f3efeb;
+        --ink: #332e2d;
+        --muted: #827a78;
+        --line: #e9e2de;
+        --rose: #d9577d;
+        --rose-dark: #70203f;
+        --rose-pale: #f7e4eb;
+        --green: #63816d;
+        --green-pale: #e6eee8;
+        --gold: #ae8748;
+        --gold-pale: #f3ecd9;
+        --blue: #647e9c;
+        --blue-pale: #e6ebf1;
+        --shadow: 0 14px 38px rgb(55 37 33 / 5%);
+        --serif: Georgia, "Times New Roman", serif;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+
+      * { box-sizing: border-box; }
+      body { margin: 0; color: var(--ink); background: var(--page); }
+      button, input, select { font: inherit; }
+      button { color: inherit; }
+      .app-shell { min-height: 100vh; display: grid; grid-template-columns: 244px minmax(0, 1fr); }
+      .sidebar {
+        display: flex; flex-direction: column; min-height: 100vh; padding: 27px 17px 18px;
+        background: var(--surface); border-right: 1px solid var(--line);
+      }
+      .brand { padding: 0 8px; }
+      .brand-wordmark { display: block; width: 100%; max-width: 190px; height: auto; mix-blend-mode: multiply; }
+      .brand-caption { margin-top: 4px; color: var(--muted); font-size: 9px; letter-spacing: 1.2px; text-transform: uppercase; }
+      .workspace {
+        display: flex; align-items: center; gap: 10px; margin: 34px 4px 23px; padding: 11px;
+        border: 1px solid var(--line); border-radius: 12px; background: var(--page);
+      }
+      .workspace-icon { display: grid; width: 32px; height: 32px; place-items: center; border-radius: 9px; background: var(--green-pale); color: var(--green); font: 600 12px var(--serif); }
+      .workspace-copy { min-width: 0; flex: 1; }
+      .workspace-copy strong, .workspace-copy span { display: block; }
+      .workspace-copy strong { font-size: 11px; font-weight: 600; }
+      .workspace-copy span { margin-top: 4px; color: var(--muted); font-size: 10px; }
+      .chevron { color: var(--muted); font-size: 15px; }
+      .nav-label { margin: 0 11px 9px; color: #a29a97; font-size: 9px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+      .nav-list { display: grid; gap: 4px; margin: 0 0 26px; padding: 0; list-style: none; }
+      .nav-link {
+        display: flex; align-items: center; gap: 12px; padding: 10px 11px; border-radius: 9px;
+        color: var(--muted); font-size: 12px; text-decoration: none;
+      }
+      .nav-link svg { width: 16px; height: 16px; stroke: currentColor; }
+      .nav-link.active { color: var(--rose-dark); background: var(--rose-pale); font-weight: 600; }
+      .nav-count { margin-left: auto; color: var(--muted); font-size: 10px; }
+      .sidebar-bottom { margin-top: auto; }
+      .garden-note { padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--page); }
+      .note-sprig { color: var(--green); font-size: 18px; }
+      .garden-note strong { display: block; margin-top: 7px; font: 600 14px var(--serif); }
+      .garden-note p { margin: 5px 0 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
+      .profile { display: flex; align-items: center; gap: 10px; margin: 18px 6px 0; }
+      .avatar { display: grid; flex: 0 0 auto; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #edcfca; color: #78464b; font: 600 11px var(--serif); }
+      .profile-copy { min-width: 0; flex: 1; }
+      .profile-copy strong, .profile-copy span { display: block; }
+      .profile-copy strong { font-size: 11px; }
+      .profile-copy span { margin-top: 3px; color: var(--muted); font-size: 10px; }
+      .main { min-width: 0; padding: 0 40px 52px; }
+      .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 75px; border-bottom: 1px solid var(--line); }
+      .breadcrumb { color: var(--muted); font-size: 11px; }
+      .breadcrumb strong { color: var(--ink); font-weight: 600; }
+      .topbar-right { display: flex; align-items: center; gap: 16px; }
+      .search { position: relative; }
+      .search svg { position: absolute; top: 10px; left: 11px; width: 15px; height: 15px; color: #9a918e; stroke: currentColor; }
+      .search input { width: 198px; height: 36px; padding: 0 11px 0 34px; border: 1px solid var(--line); border-radius: 9px; outline: none; background: var(--surface); color: var(--ink); font-size: 11px; }
+      .search input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgb(185 96 112 / 10%); }
+      .icon-button { position: relative; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--muted); }
+      .icon-button svg { width: 15px; height: 15px; stroke: currentColor; }
+      .notification-dot { position: absolute; top: 6px; right: 7px; width: 5px; height: 5px; border: 1px solid var(--surface); border-radius: 50%; background: var(--rose); }
+      .page-content { max-width: 1280px; margin: 0 auto; }
+      .welcome { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; padding: 35px 0 27px; }
+      .eyebrow { color: var(--rose-dark); font-size: 9px; font-weight: 700; letter-spacing: 1.7px; text-transform: uppercase; }
+      h1 { margin: 9px 0 7px; font: 500 31px/1.15 var(--serif); letter-spacing: -.6px; }
+      .welcome-copy p { margin: 0; color: var(--muted); font-size: 12px; }
+      .welcome-actions { display: flex; align-items: center; gap: 12px; }
+      .theme-switch { display: flex; align-items: center; gap: 8px; padding: 5px 8px 5px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+      .theme-label { color: var(--muted); font-size: 9px; white-space: nowrap; }
+      .switch { position: relative; width: 34px; height: 19px; padding: 0; border: 0; border-radius: 10px; background: #d8d2cc; cursor: pointer; transition: background .2s ease; }
+      .switch::after { position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; border-radius: 50%; background: white; content: ""; transition: transform .2s ease; }
+      .switch[aria-checked="true"] { background: #80684e; }
+      .switch[aria-checked="true"]::after { transform: translateX(15px); }
+      .primary-button { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 13px; border: 0; border-radius: 9px; background: var(--rose); color: white; font-size: 11px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgb(185 96 112 / 15%); }
+      .primary-button:hover { background: var(--rose-dark); }
+      .primary-button svg { width: 14px; height: 14px; stroke: currentColor; }
+      .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+      .stat-card { padding: 16px 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+      .stat-top { display: flex; align-items: center; justify-content: space-between; }
+      .stat-label { color: var(--muted); font-size: 10px; font-weight: 500; }
+      .stat-icon { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 9px; }
+      .stat-icon svg { width: 15px; height: 15px; stroke: currentColor; }
+      .stat-icon.rose { background: var(--rose-pale); color: var(--rose); }
+      .stat-icon.green { background: var(--green-pale); color: var(--green); }
+      .stat-icon.gold { background: var(--gold-pale); color: var(--gold); }
+      .stat-icon.blue { background: var(--blue-pale); color: var(--blue); }
+      .stat-value { margin-top: 10px; font: 500 25px/1 var(--serif); }
+      .stat-foot { display: flex; align-items: center; gap: 5px; margin-top: 8px; color: var(--muted); font-size: 9px; }
+      .stat-trend { color: var(--green); font-weight: 600; }
+      .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, .9fr); gap: 17px; margin-top: 19px; }
+      .panel { min-width: 0; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); }
+      .panel-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 17px 18px 13px; }
+      .panel-title { margin: 0; font: 600 16px/1.2 var(--serif); }
+      .panel-subtitle { margin: 4px 0 0; color: var(--muted); font-size: 9px; }
+      .text-link { padding: 4px 0; border: 0; background: none; color: var(--rose-dark); font-size: 10px; font-weight: 600; cursor: pointer; }
+      .team-list { display: grid; gap: 10px; padding: 0 13px 14px; }
+      .team-card { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+      .team-top { display: flex; align-items: center; gap: 10px; }
+      .team-mark { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; }
+      .team-mark.rose { background: var(--rose-pale); color: var(--rose-dark); }
+      .team-mark.green { background: var(--green-pale); color: var(--green); }
+      .team-mark.blue { background: var(--blue-pale); color: var(--blue); }
+      .team-mark svg { width: 17px; height: 17px; stroke: currentColor; }
+      .team-info { min-width: 0; flex: 1; }
+      .team-info strong, .team-info span { display: block; }
+      .team-info strong { font-size: 11px; font-weight: 600; }
+      .team-info span { margin-top: 3px; color: var(--muted); font-size: 9px; }
+      .team-count { color: var(--muted); font-size: 9px; white-space: nowrap; }
+      .team-count strong { color: var(--ink); font-size: 11px; font-weight: 600; }
+      .team-heading-actions { display: flex; align-items: center; gap: 12px; }
+      .team-card-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+      .item-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 9px; }
+      .item-actions .text-link { font-size: 9px; }
+      .status-pill { padding: 4px 7px; border-radius: 6px; background: var(--green-pale); color: var(--green); font-size: 8px; white-space: nowrap; }
+      .status-pill.unassigned { background: var(--gold-pale); color: #896a36; }
+      .status-pill.completed { background: var(--surface-soft); color: var(--muted); }
+      .dialog-error { color: #9d3543 !important; font-size: 10px !important; }
+      .team-skills { display: flex; align-items: center; gap: 5px; margin-top: 11px; }
+      .skill-chip { padding: 4px 7px; border-radius: 6px; background: var(--surface-soft); color: #6d6461; font-size: 8px; }
+      .team-gap-summary { margin-top: 9px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+      .team-gap-summary.has-gaps { color: #9b5d37; }
+      .coverage { margin-top: 11px; }
+      .coverage-label { display: flex; justify-content: space-between; margin-bottom: 5px; color: var(--muted); font-size: 8px; }
+      .coverage-label strong { color: var(--ink); font-weight: 600; }
+      .bar { height: 4px; overflow: hidden; border-radius: 8px; background: var(--surface-soft); }
+      .bar span { display: block; height: 100%; border-radius: inherit; background: var(--green); }
+      .garden-heading { display: flex; align-items: center; gap: 8px; }
+      .garden-heading .sprout { color: var(--green); font-size: 15px; }
+      .thicket-card { margin: 0 13px 14px; padding: 13px; border: 1px solid #eee6d8; border-radius: 10px; background: #fcfaf5; }
+      .thicket-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+      .thicket-top strong { font-size: 10px; font-weight: 600; }
+      .thicket-top span { padding: 4px 6px; border-radius: 6px; background: var(--gold-pale); color: #896a36; font-size: 8px; white-space: nowrap; }
+      .thicket-card p { margin: 6px 0 12px; color: var(--muted); font-size: 9px; line-height: 1.5; }
+      .thicket-person { display: flex; align-items: center; gap: 8px; padding-top: 9px; border-top: 1px solid #eee8dd; }
+      .thicket-person .avatar { width: 25px; height: 25px; font-size: 8px; background: #eadfca; color: #78613b; }
+      .thicket-person strong { font-size: 9px; font-weight: 600; }
+      .thicket-person span { display: block; margin-top: 2px; color: var(--muted); font-size: 8px; }
+      .roster-panel { margin-top: 18px; }
+      .anchor-target { display: block; position: relative; top: -12px; visibility: hidden; }
+      .roster-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .roster-controls { display: flex; align-items: center; gap: 8px; }
+      .select-control { max-width: 155px; height: 30px; padding: 0 8px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--muted); font-size: 9px; }
+      .member-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 0 14px 14px; }
+      .member-card { min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+      .member-top { display: flex; align-items: center; gap: 8px; }
+      .member-top .avatar { width: 32px; height: 32px; }
+      .member-info { min-width: 0; flex: 1; }
+      .member-info strong { display: block; overflow: hidden; font-size: 10px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+      .member-info span { display: block; overflow: hidden; margin-top: 3px; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+      .bloom-rating { color: var(--gold); font-size: 9px; letter-spacing: 1px; white-space: nowrap; }
+      .member-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 11px; }
+      .member-tag { padding: 4px 6px; border-radius: 5px; background: var(--green-pale); color: #54705d; font-size: 8px; }
+      .member-tag.rose { background: var(--rose-pale); color: var(--rose-dark); }
+      .member-footer { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 11px; padding-top: 9px; border-top: 1px solid var(--line); }
+      .member-assignment { overflow: hidden; color: var(--muted); font-size: 8px; text-overflow: ellipsis; white-space: nowrap; }
+      .member-assignment b { color: var(--ink); font-weight: 500; }
+      .move-select { width: 70px; border: 0; background: transparent; color: var(--rose-dark); font-size: 8px; text-align: right; cursor: pointer; }
+      .no-results { grid-column: 1 / -1; padding: 24px; color: var(--muted); font-size: 11px; text-align: center; }
+      .api-error { margin: 18px 0 0; padding: 11px 13px; border: 1px solid #d98e91; border-radius: 9px; background: #fff0ef; color: #762f39; font-size: 11px; }
+      .auth-screen { display: grid; min-height: 100vh; place-items: center; padding: 24px; background: var(--page); }
+      .auth-card { width: min(420px, 100%); padding: 30px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+      .auth-logo { display: block; width: 190px; max-width: 80%; height: auto; margin-bottom: 30px; mix-blend-mode: multiply; }
+      .auth-card h1 { margin: 0; font-size: 27px; }
+      .auth-card > p { margin: 8px 0 22px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+      .auth-form { display: grid; gap: 13px; }
+      .auth-form .primary-button { justify-content: center; min-height: 40px; margin-top: 4px; }
+      .auth-switch { width: 100%; margin-top: 17px; border: 0; background: none; color: var(--rose-dark); font-size: 11px; cursor: pointer; }
+      .auth-server-link { display: inline-block; margin-top: 15px; color: var(--rose-dark); font-size: 11px; }
+      .auth-error { margin: 0 0 15px; padding: 10px; border-radius: 8px; background: #fff0ef; color: #762f39; font-size: 11px; }
+      .auth-error.success { background: #edf6ef; color: #315d3d; }
+      .workspace-select { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 11px; font-weight: 600; }
+      .profile-logout { padding: 5px; border: 0; background: none; color: var(--muted); font-size: 10px; cursor: pointer; }
+      .topbar-action { min-height: 32px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--rose-dark); font-size: 10px; cursor: pointer; }
+      .small-dialog { width: min(440px, calc(100% - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+      .small-dialog form { display: grid; gap: 13px; padding: 21px; }
+      .small-dialog h2 { margin: 0; font: 600 20px var(--serif); }
+      .small-dialog p { margin: -7px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+      .invite-url { width: 100%; height: 36px; padding: 0 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--page); color: var(--ink); font-size: 10px; }
+      .text-link:disabled { opacity: .5; cursor: not-allowed; }
+      .person-dialog { width: min(420px, calc(100% - 32px)); max-height: calc(100vh - 32px); overflow-y: auto; padding: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+      .person-dialog::backdrop { background: rgb(35 27 25 / 38%); backdrop-filter: blur(2px); }
+      .person-form { display: grid; gap: 13px; padding: 21px; }
+      .person-form h2 { margin: 0; font: 600 20px var(--serif); }
+      .person-form > p { margin: -8px 0 2px; color: var(--muted); font-size: 11px; }
+      .form-field { display: grid; gap: 5px; color: var(--muted); font-size: 10px; }
+      .form-field input, .form-field select { width: 100%; height: 36px; padding: 0 10px; border: 1px solid var(--line); border-radius: 8px; outline: none; background: var(--page); color: var(--ink); font-size: 11px; }
+      .form-field input:focus, .form-field select:focus { border-color: var(--rose); }
+      .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+      .secondary-button { min-height: 34px; padding: 0 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-size: 10px; cursor: pointer; }
+      .mobile-menu { display: none; }
+      [hidden] { display: none !important; }
+
+      body[data-theme="fantasy"] {
+        color-scheme: dark;
+        --page: #1f111f;
+        --surface: #2a1c2b;
+        --surface-soft: #382a39;
+        --ink: #f1e9dc;
+        --muted: #b1a699;
+        --line: #49384a;
+        --rose: #ed7898;
+        --rose-dark: #f1b0c1;
+        --rose-pale: #482b3c;
+        --green: #a1b18a;
+        --green-pale: #343d32;
+        --gold: #d3b475;
+        --gold-pale: #453c2c;
+        --blue: #91a5bf;
+        --blue-pale: #333b47;
+        --shadow: 0 14px 38px rgb(0 0 0 / 19%);
+        background:
+          radial-gradient(ellipse at 80% 0%, rgb(217 87 125 / 13%), transparent 42%),
+          var(--page);
+      }
+      body[data-theme="fantasy"] .auth-logo { mix-blend-mode: normal; }
+      body[data-theme="fantasy"] .sidebar { background: #261827; border-color: var(--line); }
+      body[data-theme="fantasy"] .brand-wordmark { mix-blend-mode: normal; border-radius: 5px; }
+      body[data-theme="fantasy"] h1, body[data-theme="fantasy"] .panel-title, body[data-theme="fantasy"] .stat-value { font-family: var(--serif); }
+      body[data-theme="fantasy"] .workspace,
+      body[data-theme="fantasy"] .team-card,
+      body[data-theme="fantasy"] .icon-button,
+      body[data-theme="fantasy"] .search input,
+      body[data-theme="fantasy"] .theme-switch,
+      body[data-theme="fantasy"] .select-control,
+      body[data-theme="fantasy"] .garden-note { background: var(--surface); }
+      body[data-theme="fantasy"] .thicket-card { border-color: var(--line); background: var(--surface-soft); }
+      body[data-theme="fantasy"] .thicket-person { border-color: var(--line); }
+      body[data-theme="fantasy"] .api-error { border-color: #8f4e62; background: #482b3c; color: #f1b0c1; }
+      body[data-theme="fantasy"] .avatar { background: var(--rose-pale); color: var(--rose-dark); }
+      body[data-theme="fantasy"] .thicket-person .avatar { background: var(--gold-pale); color: var(--gold); }
+      body[data-theme="fantasy"] .skill-chip { color: var(--muted); }
+      body[data-theme="fantasy"] .stat-trend { color: var(--green); }
+      body[data-theme="fantasy"] .primary-button { background: #b83f68; }
+      body[data-theme="fantasy"] .primary-button:hover { background: #d45d81; }
+      body[data-theme="fantasy"] .eyebrow { color: #ed91a9; }
+
+      @media (max-width: 1050px) {
+        .main { padding-right: 25px; padding-left: 25px; }
+        .member-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .dashboard-grid { grid-template-columns: minmax(0, 1.4fr) minmax(235px, .8fr); }
+      }
+      @media (max-width: 760px) {
+        .app-shell { display: block; }
+        .sidebar { display: none; }
+        .sidebar.mobile-open { position: fixed; z-index: 5; inset: 0 auto 0 0; display: flex; width: 260px; box-shadow: 12px 0 35px rgb(30 20 18 / 20%); }
+        .main { padding: 0 17px 35px; }
+        .topbar { min-height: 61px; }
+        .mobile-menu { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); }
+        .mobile-menu svg { width: 16px; height: 16px; stroke: currentColor; }
+        .breadcrumb { display: none; }
+        .topbar { justify-content: flex-end; gap: 9px; }
+        .topbar .mobile-menu { margin-right: auto; }
+        .search input { width: 155px; }
+        .welcome { align-items: flex-start; flex-direction: column; padding: 27px 0 20px; }
+        h1 { font-size: 28px; }
+        .welcome-actions { width: 100%; justify-content: space-between; }
+        .dashboard-grid { grid-template-columns: 1fr; }
+        .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+        .stat-card { padding: 12px; }
+        .stat-value { font-size: 23px; }
+      }
+      @media (max-width: 420px) {
+        .search input { width: 125px; }
+        .topbar-right { gap: 8px; }
+        .roster-heading { align-items: flex-start; flex-direction: column; }
+        .roster-controls { width: 100%; }
+        .select-control { max-width: none; flex: 1; }
+        .member-grid { grid-template-columns: 1fr; }
+        .theme-label { font-size: 8px; }
+        .theme-switch { gap: 6px; padding-left: 8px; }
+        .primary-button { padding: 0 10px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="auth-screen" id="auth-screen">
+      <div class="auth-card">
+        <img class="auth-logo" src="assets/rostera-wordmark.png" alt="Rostera">
+        <h1 id="auth-title">Sign in to Rostera</h1>
+        <p id="auth-description">Tend your teams, grow your people, and keep your work in bloom.</p>
+        <div class="auth-error" id="auth-error" role="alert" hidden></div>
+        <a class="auth-server-link" id="auth-server-link" href="http://127.0.0.1:4173/" hidden>Open the running Rostera app</a>
+        <form class="auth-form" id="auth-form">
+          <label class="form-field" id="auth-name-field" hidden>Your name<input name="name" autocomplete="name" maxlength="100"></label>
+          <label class="form-field">Email<input name="email" type="email" required autocomplete="email" maxlength="254"></label>
+          <label class="form-field">Password<input name="password" type="password" required autocomplete="current-password" minlength="12" maxlength="256"></label>
+          <label class="form-field" id="auth-workspace-field" hidden>Workspace name<input name="workspaceName" maxlength="100" placeholder="e.g. Northstar Studio"></label>
+          <button class="primary-button" id="auth-submit" type="submit">Sign in</button>
+        </form>
+        <button class="auth-switch" id="auth-switch" type="button">New to Rostera? Create an account</button>
+      </div>
+    </section>
+    <div class="app-shell" id="app-shell" hidden>
+      <aside class="sidebar" aria-label="Main navigation">
+        <div class="brand">
+          <img class="brand-wordmark" src="assets/rostera-wordmark.png" alt="Rostera">
+          <div class="brand-caption" id="brand-caption">A garden of good work</div>
+        </div>
+
+        <label class="workspace" for="workspace-select">
+          <div class="workspace-icon" aria-hidden="true">N</div>
+          <div class="workspace-copy"><select class="workspace-select" id="workspace-select" aria-label="Current workspace"></select><span id="workspace-type"></span></div>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </label>
+
+        <div class="nav-label">Workspace</div>
+        <ul class="nav-list">
+          <li><a class="nav-link active" href="#overview" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span id="overview-nav">Garden overview</span></a></li>
+          <li><a class="nav-link" href="#teams"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 5v1"/></svg><span id="teams-nav">Gardens</span><span class="nav-count">0</span></a></li>
+          <li><a class="nav-link" href="#roster"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/><path d="M8 7h8M8 11h6"/></svg><span id="roster-nav">People</span><span class="nav-count">0</span></a></li>
+          <li><a class="nav-link" href="#thicket"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-9m0 4-5-3m5 0 5-4M12 12 8 8m4 1 4-5M7 20l-3-1 1-3M16 20l3-1-1-3"/><circle cx="8" cy="6" r="2"/><circle cx="17" cy="4" r="2"/></svg><span id="thicket-nav">The Thicket</span><span class="nav-count">0</span></a></li>
+        </ul>
+
+        <div class="nav-label" id="focus-label">Keep growing</div>
+        <ul class="nav-list">
+          <li><a class="nav-link" href="#growth"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12m0 5c-5 0-8-3-8-8 5 0 8 3 8 8Zm0-4c0-6 3-9 8-9 0 5-3 9-8 9Z"/></svg><span id="growth-nav">Growth paths</span></a></li>
+          <li><a class="nav-link" href="#tending"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6 4 4M3 21l3.5-.7L20 6.8 17.2 4 3.7 17.5 3 21Z"/><path d="m12 8 4 4"/></svg><span id="assignments-nav">Tending plan</span></a></li>
+        </ul>
+
+        <div class="sidebar-bottom">
+          <div class="garden-note">
+            <span class="note-sprig" aria-hidden="true">✳</span>
+            <strong id="note-title">Growth in the garden</strong>
+            <p id="note-copy">Growth aspirations will appear here as your team adds them.</p>
+          </div>
+          <div class="profile">
+            <div class="avatar" id="profile-avatar">AM</div>
+            <div class="profile-copy"><strong id="profile-name">Alex Morgan</strong><span id="profile-role">Garden steward</span></div>
+            <button class="profile-logout" id="logout-button" type="button">Sign out</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main" id="overview">
+        <header class="topbar">
+          <button class="mobile-menu" type="button" aria-label="Open navigation" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+          <div class="breadcrumb"><span id="breadcrumb-parent">Workspace</span> <span aria-hidden="true">/</span> <strong id="breadcrumb-current">Garden overview</strong></div>
+          <div class="topbar-right">
+            <button class="topbar-action" id="create-workspace-button" type="button">New workspace</button>
+            <button class="topbar-action" id="invite-button" type="button" hidden>Invite</button>
+            <label class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+              <input id="roster-search" type="search" placeholder="Find someone..." aria-label="Search team members">
+            </label>
+            <button class="icon-button" type="button" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4"/></svg><span class="notification-dot"></span></button>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <section class="welcome">
+            <div class="welcome-copy">
+              <div class="eyebrow" id="welcome-eyebrow"></div>
+              <h1 id="welcome-title"></h1>
+              <p id="welcome-copy"></p>
+            </div>
+            <div class="welcome-actions">
+              <div class="theme-switch">
+                <span class="theme-label" id="theme-name">Corporate garden</span>
+                <button class="switch" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Switch to fantasy style"></button>
+                <span aria-hidden="true">✦</span>
+              </div>
+              <button class="primary-button" id="add-person" type="button"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span id="add-person-label">Add a person</span></button>
+            </div>
+          </section>
+
+          <section class="stats" aria-label="Roster at a glance">
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label" id="stat-people-label">People in bloom</span><span class="stat-icon rose"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="8" r="3"/><path d="M5 20v-1a7 7 0 0 1 14 0v1"/></svg></span></div>
+              <div class="stat-value" id="stat-people-value">0</div><div class="stat-foot"><span id="people-foot"></span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label" id="stat-teams-label">Active gardens</span><span class="stat-icon green"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18M5 20V9l7-5 7 5v11M9 20v-6h6v6M8 10h.01M16 10h.01"/></svg></span></div>
+              <div class="stat-value" id="stat-teams-value">0</div><div class="stat-foot"><span id="teams-foot"></span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label" id="stat-growth-label">Ready to grow</span><span class="stat-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11m0 6c-5 0-8-3-8-8 5 0 8 3 8 8Zm0-4c0-6 3-9 8-9 0 5-3 9-8 9Z"/></svg></span></div>
+              <div class="stat-value" id="stat-growth-value">0</div><div class="stat-foot"><span id="growth-foot"></span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label" id="stat-coverage-label">Skill coverage</span><span class="stat-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5m0 14h17"/><path d="m7 15 4-4 3 2 6-7"/></svg></span></div>
+              <div class="stat-value" id="stat-coverage-value">0%</div><div class="stat-foot"><span id="coverage-foot"></span></div>
+            </article>
+          </section>
+
+          <div class="dashboard-grid">
+            <section class="panel" id="teams">
+              <div class="panel-header">
+                <div><h2 class="panel-title" id="teams-title">Your gardens</h2><p class="panel-subtitle" id="teams-subtitle"></p></div>
+                <button class="text-link" id="add-team" type="button">Add team +</button>
+              </div>
+              <div class="team-list" id="team-list"></div>
+            </section>
+
+            <section class="panel" id="thicket">
+              <span class="anchor-target" id="tending"></span>
+              <div class="panel-header">
+                <div class="garden-heading"><span class="sprout" aria-hidden="true">✳</span><div><h2 class="panel-title" id="thicket-title">In the Thicket</h2><p class="panel-subtitle" id="thicket-subtitle"></p></div></div>
+                <button class="text-link" id="add-work" type="button">Add work +</button>
+              </div>
+              <div id="assignment-list"></div>
+            </section>
+          </div>
+
+          <span class="anchor-target" id="growth"></span>
+          <section class="panel roster-panel" id="roster">
+            <div class="panel-header roster-heading">
+              <div><h2 class="panel-title" id="roster-title">People in your garden</h2><p class="panel-subtitle" id="roster-subtitle"></p></div>
+              <div class="roster-controls">
+                <select class="select-control" id="team-filter" aria-label="Filter people by team">
+                  <option value="all">All teams</option><option value="product">Product &amp; Design</option><option value="engineering">Engineering</option><option value="customer">Customer Experience</option>
+                </select>
+                <button class="text-link" type="button">View roster <span aria-hidden="true">→</span></button>
+              </div>
+            </div>
+            <div class="member-grid" id="member-grid"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <dialog class="person-dialog" id="person-dialog" aria-labelledby="person-dialog-title">
+      <form class="person-form" id="person-form">
+        <h2 id="person-dialog-title">Add someone to your garden</h2>
+        <p>Add a teammate and a few of the strengths they bring.</p>
+        <label class="form-field">Name<input name="name" required autocomplete="name" placeholder="e.g. Taylor Brooks"></label>
+        <label class="form-field">Role<input name="role" required placeholder="e.g. Content designer"></label>
+        <label class="form-field">Garden<select id="person-team" name="team"><option value="product">Product &amp; Design</option><option value="engineering">Engineering</option><option value="customer">Customer Experience</option></select></label>
+        <label class="form-field">Fantasy role<input name="fantasyRole" maxlength="100" placeholder="Optional character role"></label>
+        <label class="form-field">Bloom rating<select name="bloomRating"><option value="1">1 — Budding</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5 — Full bloom</option></select></label>
+        <label class="form-field">Strengths<input name="skills" placeholder="e.g. Writing, facilitation"></label>
+        <label class="form-field">Growth areas<input name="aspirations" placeholder="e.g. Product strategy, mentoring"></label>
+        <label class="form-field">Current tending<input name="assignment" placeholder="e.g. Help center refresh"></label>
+        <p class="dialog-error" id="person-error" hidden></p>
+        <div class="form-actions"><button class="secondary-button" id="cancel-add-person" type="button">Cancel</button><button class="primary-button" id="person-submit" type="submit">Add to roster</button></div>
+      </form>
+    </dialog>
+    <dialog class="person-dialog" id="team-dialog">
+      <form class="person-form" id="team-form">
+        <h2 id="team-dialog-title">Add a team</h2>
+        <p>Set team names, focus, and the skills the team needs.</p>
+        <label class="form-field">Team name<input name="name" required maxlength="100"></label>
+        <label class="form-field">Fantasy name<input name="fantasyName" required maxlength="100"></label>
+        <label class="form-field">Description<input name="description" maxlength="300"></label>
+        <label class="form-field">Fantasy description<input name="fantasyDescription" maxlength="300"></label>
+        <label class="form-field">Color family<select name="color"><option value="rose">Rose</option><option value="green">Green</option><option value="blue">Blue</option></select></label>
+        <label class="form-field">Required skills<input name="requiredSkills" placeholder="e.g. Research, facilitation"></label>
+        <p class="dialog-error" id="team-error" hidden></p>
+        <div class="form-actions"><button class="secondary-button" type="button" data-close-dialog>Cancel</button><button class="primary-button" type="submit">Save team</button></div>
+      </form>
+    </dialog>
+    <dialog class="person-dialog" id="work-dialog">
+      <form class="person-form" id="work-form">
+        <h2 id="work-dialog-title">Add work</h2>
+        <p>Create and manage an assignment for a team or person.</p>
+        <label class="form-field">Title<input name="title" required maxlength="160"></label>
+        <label class="form-field">Description<input name="description" maxlength="500"></label>
+        <label class="form-field">Team<select name="teamId"><option value="">No team</option></select></label>
+        <label class="form-field">Required skill<input name="requiredSkill" maxlength="100" placeholder="Optional"></label>
+        <label class="form-field">Assigned person<select name="assignedPersonId"><option value="">Unassigned</option></select></label>
+        <label class="form-field" id="work-status-field" hidden>Status<select name="status"><option value="unassigned">Unassigned</option><option value="assigned">Assigned</option><option value="completed">Completed</option></select></label>
+        <p class="dialog-error" id="work-error" hidden></p>
+        <div class="form-actions"><button class="secondary-button" type="button" data-close-dialog>Cancel</button><button class="primary-button" type="submit">Save work</button></div>
+      </form>
+    </dialog>
+    <dialog class="small-dialog" id="workspace-dialog">
+      <form id="workspace-form">
+        <h2>Create a workspace</h2><p>A workspace has its own teams, people, assignments, and invitations.</p>
+        <label class="form-field">Workspace name<input name="name" required maxlength="100"></label>
+        <div class="form-actions"><button class="secondary-button" type="button" data-close-dialog>Cancel</button><button class="primary-button" type="submit">Create workspace</button></div>
+      </form>
+    </dialog>
+    <dialog class="small-dialog" id="invite-dialog">
+      <form id="invite-form">
+        <h2>Invite someone</h2><p>This single-use invitation expires in seven days. Share the link with the person joining your workspace.</p>
+        <input class="invite-url" id="invite-url" readonly aria-label="Invitation link" hidden>
+        <div class="form-actions"><button class="secondary-button" type="button" data-close-dialog>Close</button><button class="primary-button" id="create-invite-button" type="submit">Create invite link</button></div>
+      </form>
+    </dialog>
+    <script>
+      const copy = {
+        corporate: {
+          caption: "A garden of good work",
+          overview: "Garden overview",
+          teams: "Gardens",
+          roster: "People",
+          thicket: "The Thicket",
+          focus: "Keep growing",
+          growth: "Growth paths",
+          assignments: "Tending plan",
+          steward: "Garden steward",
+          theme: "Corporate garden",
+          add: "Add a person",
+          people: "People in bloom",
+          gardens: "Active gardens",
+          ready: "Ready to grow",
+          coverage: "Skill coverage",
+          gardensTitle: "Your gardens",
+          gardensSubtitle: "Required skills and current team gaps",
+          thicketTitle: "In the Thicket",
+          rosterTitle: "People in your garden",
+          skillCoverage: "Skill coverage",
+          tending: "Tending",
+          filterAll: "All teams"
+        },
+        fantasy: {
+          caption: "A fellowship in full bloom",
+          overview: "Guildhall",
+          teams: "Entities",
+          roster: "Fellowship",
+          thicket: "The Wildwood",
+          focus: "Guild pursuits",
+          growth: "Paths of mastery",
+          assignments: "Quests & errands",
+          steward: "Guild steward",
+          theme: "Fantasy guildhall",
+          add: "Welcome a fellow",
+          people: "Fellows in the guild",
+          gardens: "Active companies",
+          ready: "Ready for a quest",
+          coverage: "Party readiness",
+          gardensTitle: "Your entities",
+          gardensSubtitle: "Required strengths and current party gaps",
+          thicketTitle: "In the Wildwood",
+          rosterTitle: "Fellows of the guild",
+          skillCoverage: "Party readiness",
+          tending: "Quest",
+          filterAll: "All companies"
+        }
+      };
+
+      const themeToggle = document.querySelector("#theme-toggle");
+      const searchInput = document.querySelector("#roster-search");
+      const teamFilter = document.querySelector("#team-filter");
+      const teamSelect = document.querySelector("#person-team");
+      const teamList = document.querySelector("#team-list");
+      const memberGrid = document.querySelector("#member-grid");
+      const assignmentList = document.querySelector("#assignment-list");
+      const personDialog = document.querySelector("#person-dialog");
+      const personForm = document.querySelector("#person-form");
+      const teamDialog = document.querySelector("#team-dialog");
+      const teamForm = document.querySelector("#team-form");
+      const workDialog = document.querySelector("#work-dialog");
+      const workForm = document.querySelector("#work-form");
+      const authScreen = document.querySelector("#auth-screen");
+      const appShell = document.querySelector("#app-shell");
+      const authForm = document.querySelector("#auth-form");
+      const authParams = new URLSearchParams(window.location.search);
+      const invitationToken = authParams.get("invite");
+      let authMode = "login";
+      let currentUser = null;
+      let currentWorkspace = null;
+      let currentRole = null;
+      let availableWorkspaces = [];
+      let allAssignments = [];
+      let dashboard = { teams: [], people: [], assignments: [], stats: {
+        people: 0, teams: 0, readyToGrow: 0, growthAreas: 0, unassignedAssignments: 0,
+        assignedAssignments: 0, completedAssignments: 0, skillGaps: 0, skillCoverage: 0
+      } };
+
+      async function api(path, options = {}) {
+        const workspaceId = localStorage.getItem("rostera_workspace_id");
+        const response = await fetch(path, {
+          ...options,
+          credentials: "same-origin",
+          headers: {
+            "content-type": "application/json",
+            ...(workspaceId ? { "x-workspace-id": workspaceId } : {}),
+            ...options.headers
+          }
+        });
+        if (!response.ok) {
+          const payload = await response.json().catch(() => ({}));
+          const message = payload.error || `Request failed (${response.status}).`;
+          if (response.status === 403 && message.includes("different web address")) {
+            throw new Error(`${message} Do not open the HTML file directly; use the Rostera server address.`);
+          }
+          throw new Error(message);
+        }
+        return response.status === 204 ? null : response.json();
+      }
+
+      function element(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      function currentTeamName(team) {
+        return document.body.dataset.theme === "fantasy" ? team.fantasyName : team.name;
+      }
+
+      function initials(name) {
+        return name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("").toUpperCase();
+      }
+
+      function countLabel(count, singular, plural = `${singular}s`) {
+        return `${count} ${count === 1 ? singular : plural}`;
+      }
+
+      function showError(message) {
+        let error = document.querySelector("#api-error");
+        if (!error) {
+          error = element("div", "api-error");
+          error.id = "api-error";
+          error.setAttribute("role", "alert");
+          document.querySelector(".page-content").prepend(error);
+        }
+        error.textContent = message;
+        error.hidden = false;
+      }
+
+      function clearError() {
+        const error = document.querySelector("#api-error");
+        if (error) error.hidden = true;
+      }
+
+      function setTheme(theme) {
+        const fantasy = theme === "fantasy";
+        const text = copy[theme];
+        document.body.dataset.theme = fantasy ? "fantasy" : "corporate";
+        themeToggle.setAttribute("aria-checked", String(fantasy));
+        themeToggle.setAttribute("aria-label", fantasy ? "Switch to corporate style" : "Switch to fantasy style");
+        document.querySelector("#theme-name").textContent = text.theme;
+        document.querySelector("#brand-caption").textContent = text.caption;
+        document.querySelector("#workspace-type").textContent = fantasy
+          ? `${countLabel(dashboard.stats.teams, "company", "companies")} · ${countLabel(dashboard.stats.people, "fellow")}`
+          : `${countLabel(dashboard.stats.teams, "team")} · ${countLabel(dashboard.stats.people, "person", "people")}`;
+        document.querySelector("#overview-nav").textContent = text.overview;
+        document.querySelector("#teams-nav").textContent = text.teams;
+        document.querySelector("#roster-nav").textContent = text.roster;
+        document.querySelector("#thicket-nav").textContent = text.thicket;
+        document.querySelector("#focus-label").textContent = text.focus;
+        document.querySelector("#growth-nav").textContent = text.growth;
+        document.querySelector("#assignments-nav").textContent = text.assignments;
+        document.querySelector("#profile-role").textContent = currentRole === "owner" ? "Workspace owner" : text.steward;
+        document.querySelector("#breadcrumb-current").textContent = text.overview;
+        const today = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date());
+        const firstName = currentUser?.name.split(/\s+/)[0] || "there";
+        document.querySelector("#welcome-eyebrow").textContent = today;
+        const hour = new Date().getHours();
+        const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        document.querySelector("#welcome-title").textContent = fantasy ? `Welcome back, ${firstName}` : `${greeting}, ${firstName}`;
+        document.querySelector("#welcome-copy").textContent = dashboard.stats.unassignedAssignments
+          ? `${countLabel(dashboard.stats.unassignedAssignments, fantasy ? "quest" : "work item")} ${fantasy ? (dashboard.stats.unassignedAssignments === 1 ? "awaits a fellow" : "await a fellow") : "need an owner"} across ${countLabel(dashboard.stats.teams, fantasy ? "company" : "team", fantasy ? "companies" : "teams")}.`
+          : `${countLabel(dashboard.stats.people, fantasy ? "fellow" : "person", fantasy ? "fellows" : "people")} across ${countLabel(dashboard.stats.teams, fantasy ? "company" : "team", fantasy ? "companies" : "teams")}; no unassigned work right now.`;
+        document.querySelector("#add-person-label").textContent = text.add;
+        document.querySelector("#stat-people-label").textContent = text.people;
+        document.querySelector("#stat-teams-label").textContent = text.gardens;
+        document.querySelector("#stat-growth-label").textContent = text.ready;
+        document.querySelector("#stat-coverage-label").textContent = text.coverage;
+        document.querySelector("#people-foot").textContent = `${countLabel(dashboard.stats.people, fantasy ? "fellow" : "person", fantasy ? "fellows" : "people")} in this workspace`;
+        document.querySelector("#teams-foot").textContent = `${countLabel(dashboard.stats.assignedAssignments, fantasy ? "active quest" : "active assignment")}`;
+        document.querySelector("#growth-foot").textContent = fantasy
+          ? `${countLabel(dashboard.stats.growthAreas, "budding talent")}`
+          : `${countLabel(dashboard.stats.growthAreas, "recorded growth area")}`;
+        document.querySelector("#coverage-foot").textContent = fantasy
+          ? `${countLabel(dashboard.stats.skillGaps, "unmet strength")}`
+          : `${countLabel(dashboard.stats.skillGaps, "required skill")} uncovered`;
+        document.querySelector("#teams-title").textContent = text.gardensTitle;
+        const gapLabel = dashboard.stats.skillGaps === 1 ? "gap" : "gaps";
+        document.querySelector("#teams-subtitle").textContent = `${text.gardensSubtitle} · ${dashboard.stats.skillGaps} ${gapLabel}`;
+        document.querySelector("#thicket-title").textContent = text.thicketTitle;
+        document.querySelector("#thicket-subtitle").textContent = `${countLabel(dashboard.stats.unassignedAssignments, fantasy ? "unclaimed quest" : "unassigned work item")} · ${countLabel(dashboard.stats.assignedAssignments, fantasy ? "assigned quest" : "active assignment")} · ${countLabel(dashboard.stats.completedAssignments, fantasy ? "completed quest" : "completed assignment")}`;
+        document.querySelector("#roster-title").textContent = text.rosterTitle;
+        document.querySelector("#roster-subtitle").textContent = fantasy
+          ? `${countLabel(dashboard.stats.people, "fellow")} · ${countLabel(dashboard.stats.growthAreas, "path of mastery", "paths of mastery")}`
+          : `${countLabel(dashboard.stats.people, "person", "people")} · ${countLabel(dashboard.stats.growthAreas, "growth area")}`;
+        document.querySelector("#note-copy").textContent = dashboard.stats.readyToGrow
+          ? `${countLabel(dashboard.stats.readyToGrow, fantasy ? "fellow has" : "person has", fantasy ? "fellows have" : "people have")} ${countLabel(dashboard.stats.growthAreas, fantasy ? "recorded path of mastery" : "recorded growth area", fantasy ? "recorded paths of mastery" : "recorded growth areas")}.`
+          : "No growth aspirations have been recorded yet. Add growth areas from a person's profile.";
+        document.querySelector("#team-filter option[value='all']").textContent = text.filterAll;
+        renderDashboard();
+      }
+
+      function renderTeamOptions() {
+        const selectedFilter = teamFilter.value;
+        teamFilter.replaceChildren(new Option(copy[document.body.dataset.theme].filterAll, "all"));
+        teamSelect.replaceChildren();
+        const workTeam = workForm.elements.teamId;
+        const selectedWorkTeam = workTeam.value;
+        workTeam.replaceChildren(new Option("No team", ""));
+        for (const team of dashboard.teams) {
+          teamFilter.add(new Option(currentTeamName(team), team.id));
+          teamSelect.add(new Option(currentTeamName(team), team.id));
+          workTeam.add(new Option(currentTeamName(team), team.id));
+        }
+        teamFilter.value = dashboard.teams.some((team) => team.id === selectedFilter) ? selectedFilter : "all";
+        if ([...workTeam.options].some((option) => option.value === selectedWorkTeam)) workTeam.value = selectedWorkTeam;
+        const assignee = workForm.elements.assignedPersonId;
+        const selectedPerson = assignee.value;
+        assignee.replaceChildren(new Option("Unassigned", ""));
+        for (const person of dashboard.people) assignee.add(new Option(person.name, person.id));
+        if ([...assignee.options].some((option) => option.value === selectedPerson)) assignee.value = selectedPerson;
+      }
+
+      function renderTeams() {
+        teamList.replaceChildren();
+        for (const team of dashboard.teams) {
+          const card = element("article", "team-card");
+          const top = element("div", "team-top");
+          const mark = element("div", `team-mark ${["rose", "green", "blue"].includes(team.color) ? team.color : "rose"}`);
+          mark.setAttribute("aria-hidden", "true");
+          mark.textContent = "✿";
+          const info = element("div", "team-info");
+          info.append(element("strong", "", currentTeamName(team)));
+          info.append(element("span", "", document.body.dataset.theme === "fantasy" ? team.fantasyDescription : team.description));
+          const count = element("div", "team-count");
+          const memberLabel = document.body.dataset.theme === "fantasy"
+            ? team.members === 1 ? "fellow" : "fellows"
+            : team.members === 1 ? "person" : "people";
+          count.append(element("strong", "", String(team.members)), ` ${memberLabel}`);
+          top.append(mark, info, count);
+
+          const skills = element("div", "team-skills");
+          (team.requiredSkills.length ? team.requiredSkills : ["No skill needs set"]).forEach((skill) => {
+            skills.append(element("span", "skill-chip", skill));
+          });
+          const gapSummary = element("div", "team-gap-summary");
+          gapSummary.classList.toggle("has-gaps", team.missingSkills.length > 0);
+          gapSummary.textContent = team.missingSkills.length
+            ? `${document.body.dataset.theme === "fantasy" ? "Needs strength in" : "Skill gaps"}: ${team.missingSkills.join(", ")}`
+            : team.requiredSkills.length ? "All required skills are covered" : "No required skills set";
+          const coverage = element("div", "coverage");
+          const label = element("div", "coverage-label");
+          label.append(element("span", "", copy[document.body.dataset.theme].skillCoverage));
+          label.append(element("strong", "", `${team.skillCoverage}%`));
+          const bar = element("div", "bar");
+          const fill = element("span");
+          fill.style.width = `${team.skillCoverage}%`;
+          bar.append(fill);
+          coverage.append(label, bar);
+          const edit = element("button", "text-link", "Edit team");
+          edit.type = "button";
+          edit.addEventListener("click", () => openTeamEditor(team));
+          const actions = element("div", "team-card-actions");
+          if (currentRole === "owner") actions.append(edit);
+          card.append(top, skills, gapSummary, coverage);
+          if (currentRole === "owner") card.append(actions);
+          teamList.append(card);
+        }
+        if (!dashboard.teams.length) teamList.append(element("div", "no-results", "No teams yet. Create a team to start shaping your roster."));
+      }
+
+      function renderRoster() {
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedTeam = teamFilter.value;
+        const members = dashboard.people.filter((person) =>
+          `${person.name} ${person.role} ${person.fantasyRole} ${person.skills.join(" ")}`.toLowerCase().includes(query) &&
+          (selectedTeam === "all" || person.teamId === selectedTeam)
+        );
+        memberGrid.replaceChildren();
+        for (const person of members) {
+          const card = element("article", "member-card");
+          const top = element("div", "member-top");
+          const avatar = element("div", "avatar", initials(person.name));
+          const info = element("div", "member-info");
+          info.append(element("strong", "", person.name));
+          info.append(element("span", "member-role", document.body.dataset.theme === "fantasy" ? person.fantasyRole : person.role));
+          const bloom = element("span", "bloom-rating", "✿".repeat(person.bloomRating));
+          bloom.setAttribute("aria-label", `Bloom rating: ${person.bloomRating} out of 5`);
+          top.append(avatar, info, bloom);
+
+          const tags = element("div", "member-tags");
+          const tagsToShow = person.skills.length ? person.skills : ["Budding"];
+          tagsToShow.forEach((skill, index) => {
+            tags.append(element("span", `member-tag${index % 2 ? " rose" : ""}`, skill));
+          });
+          const growth = element("div", "member-tags");
+          person.aspirations.forEach((aspiration) => growth.append(element("span", "member-tag rose", `Growing: ${aspiration}`)));
+          if (person.aspirations.length) growth.setAttribute("aria-label", "Growth aspirations");
+          const edit = element("button", "text-link", "Edit person");
+          edit.type = "button";
+          edit.addEventListener("click", () => openPersonEditor(person));
+          const footer = element("div", "member-footer");
+          const assignment = element("span", "member-assignment");
+          assignment.append(element("b", "assignment-label", copy[document.body.dataset.theme].tending));
+          assignment.append(" ", element("span", "member-assignment-text", person.currentAssignment?.title ?? "No active assignment"));
+          const move = element("select", "move-select");
+          move.setAttribute("aria-label", `Move ${person.name} to another team`);
+          move.disabled = currentRole !== "owner";
+          for (const team of dashboard.teams) move.add(new Option(currentTeamName(team), team.id, false, team.id === person.teamId));
+          move.addEventListener("change", async () => {
+            try {
+              await api(`/api/people/${encodeURIComponent(person.id)}`, {
+                method: "PATCH",
+                body: JSON.stringify({ teamId: move.value })
+              });
+              await loadDashboard();
+            } catch (error) {
+              showError(`Could not move ${person.name}: ${error.message}`);
+              await loadDashboard();
+            }
+          });
+          footer.append(assignment);
+          if (currentRole === "owner") footer.append(move, edit);
+          card.append(top, tags, growth, footer);
+          memberGrid.append(card);
+        }
+        if (!members.length) {
+          memberGrid.append(element("div", "no-results", dashboard.people.length
+            ? "No people match that search. Try another name or team."
+            : "No people yet. Add someone to start building your roster."));
+        }
+      }
+
+      function renderAssignments() {
+        assignmentList.replaceChildren();
+        for (const assignment of allAssignments) {
+          const card = element("article", "thicket-card");
+          const top = element("div", "thicket-top");
+          top.append(element("strong", "", assignment.title));
+          const statusLabel = assignment.status === "completed"
+            ? "Completed"
+            : assignment.status === "assigned" ? "Assigned" : document.body.dataset.theme === "fantasy" ? "Quest unclaimed" : "Unassigned";
+          const status = element("span", `status-pill ${assignment.status}`, statusLabel);
+          top.append(status);
+          const description = element("p", "", assignment.description || "No description provided.");
+          const suggested = dashboard.assignments.find((item) => item.id === assignment.id)?.suggestedPeople[0];
+          const assignedPerson = dashboard.people.find((person) => person.id === assignment.assignedPersonId);
+          const person = element("div", "thicket-person");
+          if (assignedPerson || suggested) {
+            const shownPerson = assignedPerson ?? suggested;
+            person.append(element("div", "avatar", initials(shownPerson.name)));
+            const copyText = element("div");
+            copyText.append(element("strong", "", shownPerson.name));
+            copyText.append(element("span", "", assignedPerson ? "Assigned to this work" : suggested.reason));
+            person.append(copyText);
+          } else {
+            person.append(element("span", "", "No one assigned yet."));
+          }
+          const edit = element("button", "text-link", "Edit / reassign");
+          edit.type = "button";
+          edit.addEventListener("click", () => openWorkEditor(assignment));
+          const actions = element("div", "item-actions");
+          if (currentRole === "owner") actions.append(edit);
+          if (currentRole === "owner" && assignment.status !== "completed") {
+            const complete = element("button", "text-link", "Mark complete");
+            complete.type = "button";
+            complete.addEventListener("click", () => changeAssignmentStatus(assignment, "completed"));
+            actions.append(complete);
+          }
+          if (currentRole === "owner" && assignment.status === "completed") {
+            const reopen = element("button", "text-link", "Reopen");
+            reopen.type = "button";
+            reopen.addEventListener("click", () => changeAssignmentStatus(assignment, assignment.assignedPersonId ? "assigned" : "unassigned"));
+            actions.append(reopen);
+          }
+          card.append(top, description, person);
+          if (currentRole === "owner") card.append(actions);
+          assignmentList.append(card);
+        }
+        if (!allAssignments.length) {
+          assignmentList.append(element("div", "no-results", "No work yet. Add an assignment to begin tending."));
+        }
+      }
+
+      function renderDashboard() {
+        renderTeamOptions();
+        renderTeams();
+        renderRoster();
+        renderAssignments();
+        document.querySelector("#stat-people-value").textContent = String(dashboard.stats.people);
+        document.querySelector("#stat-teams-value").textContent = String(dashboard.stats.teams);
+        document.querySelector("#stat-growth-value").textContent = String(dashboard.stats.readyToGrow);
+        document.querySelector("#stat-coverage-value").textContent = `${dashboard.stats.skillCoverage}%`;
+        document.querySelector(".nav-count").textContent = String(dashboard.stats.teams);
+        document.querySelectorAll(".nav-count")[1].textContent = String(dashboard.stats.people);
+        document.querySelectorAll(".nav-count")[2].textContent = String(allAssignments.length);
+      }
+
+      async function loadDashboard() {
+        try {
+          [dashboard, { assignments: allAssignments }] = await Promise.all([
+            api("/api/dashboard"),
+            api("/api/assignments")
+          ]);
+          clearError();
+          setTheme(document.body.dataset.theme === "fantasy" ? "fantasy" : "corporate");
+        } catch (error) {
+          showError(`The Rostera backend could not load the dashboard: ${error.message} Start the app with npm run dev.`);
+        }
+      }
+
+      function showAuthError(message) {
+          const error = document.querySelector("#auth-error");
+          error.classList.remove("success");
+          error.textContent = message;
+          error.hidden = false;
+        }
+
+      function showAuthSuccess(message) {
+          const error = document.querySelector("#auth-error");
+          error.classList.add("success");
+          error.textContent = message;
+          error.hidden = false;
+        }
+
+      function setAuthMode(mode) {
+          authMode = mode;
+          const registering = mode === "register";
+          const nameField = document.querySelector("#auth-name-field");
+          const workspaceField = document.querySelector("#auth-workspace-field");
+          nameField.hidden = !registering;
+          nameField.querySelector("input").required = registering;
+          workspaceField.hidden = !registering || Boolean(invitationToken);
+          workspaceField.querySelector("input").required = registering && !invitationToken;
+          document.querySelector("#auth-title").textContent = registering ? "Create your Rostera account" : "Sign in to Rostera";
+          document.querySelector("#auth-description").textContent = invitationToken
+            ? "Join your team workspace and help keep its work in bloom."
+            : "Tend your teams, grow your people, and keep your work in bloom.";
+          document.querySelector("#auth-submit").textContent = registering ? "Create account" : "Sign in";
+          document.querySelector("#auth-switch").textContent = registering
+            ? "Already have an account? Sign in"
+            : "New to Rostera? Create an account";
+          authForm.elements.password.autocomplete = registering ? "new-password" : "current-password";
+          document.querySelector("#auth-error").hidden = true;
+        }
+
+      function updateWorkspacePicker() {
+          const picker = document.querySelector("#workspace-select");
+          picker.replaceChildren(...availableWorkspaces.map((workspace) => new Option(workspace.name, workspace.id)));
+          picker.value = currentWorkspace.id;
+          document.querySelector(".workspace-icon").textContent = initials(currentWorkspace.name).slice(0, 1);
+          document.querySelector("#profile-name").textContent = currentUser.name;
+          document.querySelector("#profile-avatar").textContent = initials(currentUser.name);
+          document.querySelector("#invite-button").hidden = currentRole !== "owner";
+          document.querySelector("#profile-role").textContent = currentRole === "owner"
+            ? "Workspace owner"
+            : "Workspace member · read only";
+          const hour = new Date().getHours();
+          const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+          document.querySelector("#welcome-title").textContent = document.body.dataset.theme === "fantasy"
+            ? `Welcome back, ${currentUser.name.split(/\s+/)[0]}`
+            : `${greeting}, ${currentUser.name.split(/\s+/)[0]}`;
+        }
+
+      async function initializeSession() {
+          const session = await api("/api/auth/me");
+          if (!session.user) {
+            currentUser = null;
+            authScreen.hidden = false;
+            appShell.hidden = true;
+            setAuthMode("login");
+            return;
+          }
+          currentUser = session.user;
+          currentWorkspace = session.workspace;
+          currentRole = session.role;
+          availableWorkspaces = session.workspaces;
+          if (currentWorkspace?.id) localStorage.setItem("rostera_workspace_id", currentWorkspace.id);
+          authScreen.hidden = true;
+          appShell.hidden = false;
+          updateWorkspacePicker();
+          const owner = currentRole === "owner";
+          document.querySelector("#add-person").hidden = !owner;
+          document.querySelector("#add-team").hidden = !owner;
+          document.querySelector("#add-work").hidden = !owner;
+          setTheme(document.body.dataset.theme || "corporate");
+          await loadDashboard();
+        }
+
+      async function submitAuth(event) {
+          event.preventDefault();
+          const values = new FormData(authForm);
+          const payload = {
+            email: String(values.get("email")).trim(),
+            password: String(values.get("password"))
+          };
+          try {
+            if (authMode === "register") {
+              payload.name = String(values.get("name")).trim();
+              if (invitationToken) payload.invitationToken = invitationToken;
+              else payload.workspaceName = String(values.get("workspaceName")).trim();
+              const result = await api("/api/auth/register", { method: "POST", body: JSON.stringify(payload) });
+              if (result.verificationRequired) {
+                showAuthSuccess("Your account is ready. Check your email to confirm your address, then sign in.");
+                return;
+              }
+            } else {
+              await api("/api/auth/login", { method: "POST", body: JSON.stringify(payload) });
+              if (invitationToken) {
+                const membership = await api("/api/invitations/redeem", {
+                  method: "POST",
+                  body: JSON.stringify({ token: invitationToken })
+                });
+                localStorage.setItem("rostera_workspace_id", membership.workspaceId);
+              }
+            }
+            if (invitationToken) {
+              authParams.delete("invite");
+              const remaining = authParams.toString();
+              history.replaceState(null, "", `${window.location.pathname}${remaining ? `?${remaining}` : ""}`);
+            }
+            await initializeSession();
+          } catch (error) {
+            showAuthError(error.message || "Could not sign in.");
+          }
+        }
+
+      async function createWorkspace(event) {
+          event.preventDefault();
+          const name = String(new FormData(event.currentTarget).get("name")).trim();
+          try {
+            const result = await api("/api/workspaces", { method: "POST", body: JSON.stringify({ name }) });
+            localStorage.setItem("rostera_workspace_id", result.workspace.id);
+            event.currentTarget.reset();
+            document.querySelector("#workspace-dialog").close();
+            await initializeSession();
+          } catch (error) {
+            showError(`Could not create workspace: ${error.message}`);
+          }
+        }
+
+      async function createInvite(event) {
+          event.preventDefault();
+          try {
+            const result = await api("/api/invitations", { method: "POST", body: JSON.stringify({}) });
+            const inviteUrl = document.querySelector("#invite-url");
+            inviteUrl.value = result.url;
+            inviteUrl.hidden = false;
+            inviteUrl.focus();
+            inviteUrl.select();
+            document.querySelector("#create-invite-button").textContent = "Create another link";
+          } catch (error) {
+            showError(`Could not create invitation: ${error.message}`);
+            document.querySelector("#invite-dialog").close();
+        }
+      }
+
+      function filterRoster() {
+        renderRoster();
+      }
+
+      function splitList(value) {
+        return value.split(",").map((item) => item.trim()).filter(Boolean);
+      }
+
+      function setDialogError(id, message) {
+        const error = document.querySelector(id);
+        error.textContent = message;
+        error.hidden = false;
+      }
+
+      function openPersonEditor(person) {
+        personForm.reset();
+        personForm.dataset.personId = person?.id ?? "";
+        document.querySelector("#person-dialog-title").textContent = person ? "Edit person" : "Add someone to your garden";
+        document.querySelector("#person-submit").textContent = person ? "Save changes" : "Add to roster";
+        personForm.elements.assignment.closest("label").hidden = Boolean(person);
+        document.querySelector("#person-error").hidden = true;
+        if (person) {
+          personForm.elements.name.value = person.name;
+          personForm.elements.role.value = person.role;
+          personForm.elements.team.value = person.teamId;
+          personForm.elements.fantasyRole.value = person.fantasyRole;
+          personForm.elements.bloomRating.value = String(person.bloomRating);
+          personForm.elements.skills.value = person.skills.join(", ");
+          personForm.elements.aspirations.value = person.aspirations.join(", ");
+        }
+        personDialog.showModal();
+      }
+
+      function openTeamEditor(team) {
+        teamForm.reset();
+        teamForm.dataset.teamId = team?.id ?? "";
+        document.querySelector("#team-dialog-title").textContent = team ? "Edit team" : "Add a team";
+        document.querySelector("#team-error").hidden = true;
+        if (team) {
+          teamForm.elements.name.value = team.name;
+          teamForm.elements.fantasyName.value = team.fantasyName;
+          teamForm.elements.description.value = team.description;
+          teamForm.elements.fantasyDescription.value = team.fantasyDescription;
+          teamForm.elements.color.value = team.color;
+          teamForm.elements.requiredSkills.value = team.requiredSkills.join(", ");
+        }
+        teamDialog.showModal();
+      }
+
+      function openWorkEditor(assignment) {
+        workForm.reset();
+        workForm.dataset.assignmentId = assignment?.id ?? "";
+        document.querySelector("#work-dialog-title").textContent = assignment ? "Edit and reassign work" : "Add work";
+        document.querySelector("#work-status-field").hidden = !assignment;
+        document.querySelector("#work-error").hidden = true;
+        renderTeamOptions();
+        if (assignment) {
+          workForm.elements.title.value = assignment.title;
+          workForm.elements.description.value = assignment.description;
+          workForm.elements.teamId.value = assignment.teamId ?? "";
+          workForm.elements.requiredSkill.value = assignment.requiredSkill;
+          workForm.elements.assignedPersonId.value = assignment.assignedPersonId ?? "";
+          workForm.elements.status.value = assignment.status;
+        }
+        workDialog.showModal();
+      }
+
+      async function changeAssignmentStatus(assignment, status) {
+        try {
+          await api(`/api/assignments/${encodeURIComponent(assignment.id)}`, {
+            method: "PATCH",
+            body: JSON.stringify({ status })
+          });
+          await loadDashboard();
+        } catch (error) {
+          showError(`Could not update "${assignment.title}": ${error.message}`);
+        }
+      }
+
+      async function addPerson(event) {
+        event.preventDefault();
+        const values = new FormData(personForm);
+        const name = String(values.get("name")).trim();
+        const role = String(values.get("role")).trim();
+        if (!name || !role) return;
+        const personId = personForm.dataset.personId;
+        const payload = {
+          name,
+          role,
+          fantasyRole: String(values.get("fantasyRole")).trim() || role,
+          teamId: String(values.get("team")),
+          bloomRating: Number(values.get("bloomRating")),
+          skills: splitList(String(values.get("skills"))),
+          aspirations: splitList(String(values.get("aspirations")))
+        };
+        if (!personId) payload.assignment = String(values.get("assignment")).trim();
+        try {
+          await api(personId ? `/api/people/${encodeURIComponent(personId)}` : "/api/people", {
+            method: personId ? "PATCH" : "POST",
+            body: JSON.stringify(payload)
+          });
+          personForm.reset();
+          delete personForm.dataset.personId;
+          personDialog.close();
+          await loadDashboard();
+        } catch (error) {
+          setDialogError("#person-error", `Could not save ${name}: ${error.message}`);
+        }
+      }
+
+      async function saveTeam(event) {
+        event.preventDefault();
+        const values = new FormData(teamForm);
+        const teamId = teamForm.dataset.teamId;
+        const payload = {
+          name: String(values.get("name")).trim(),
+          fantasyName: String(values.get("fantasyName")).trim(),
+          description: String(values.get("description")).trim(),
+          fantasyDescription: String(values.get("fantasyDescription")).trim(),
+          color: String(values.get("color")),
+          requiredSkills: splitList(String(values.get("requiredSkills")))
+        };
+        try {
+          await api(teamId ? `/api/teams/${encodeURIComponent(teamId)}` : "/api/teams", {
+            method: teamId ? "PATCH" : "POST",
+            body: JSON.stringify(payload)
+          });
+          teamForm.reset();
+          delete teamForm.dataset.teamId;
+          teamDialog.close();
+          await loadDashboard();
+        } catch (error) {
+          setDialogError("#team-error", `Could not save team: ${error.message}`);
+        }
+      }
+
+      async function saveWork(event) {
+        event.preventDefault();
+        const values = new FormData(workForm);
+        const assignmentId = workForm.dataset.assignmentId;
+        const assignee = String(values.get("assignedPersonId"));
+        const payload = {
+          title: String(values.get("title")).trim(),
+          description: String(values.get("description")).trim(),
+          teamId: String(values.get("teamId")) || null,
+          requiredSkill: String(values.get("requiredSkill")).trim()
+        };
+        if (assignmentId) {
+          payload.assignedPersonId = assignee || null;
+          payload.status = String(values.get("status"));
+        } else if (assignee) {
+          payload.assignedPersonId = assignee;
+        }
+        try {
+          await api(assignmentId ? `/api/assignments/${encodeURIComponent(assignmentId)}` : "/api/assignments", {
+            method: assignmentId ? "PATCH" : "POST",
+            body: JSON.stringify(payload)
+          });
+          workForm.reset();
+          delete workForm.dataset.assignmentId;
+          workDialog.close();
+          await loadDashboard();
+        } catch (error) {
+          setDialogError("#work-error", `Could not save work: ${error.message}`);
+        }
+      }
+
+      themeToggle.addEventListener("click", () => {
+        setTheme(document.body.dataset.theme === "fantasy" ? "corporate" : "fantasy");
+      });
+      searchInput.addEventListener("input", filterRoster);
+      teamFilter.addEventListener("change", filterRoster);
+      document.querySelector("#add-person").addEventListener("click", () => openPersonEditor());
+      document.querySelector("#cancel-add-person").addEventListener("click", () => personDialog.close());
+      personForm.addEventListener("submit", addPerson);
+      document.querySelector("#add-team").addEventListener("click", () => openTeamEditor());
+      teamForm.addEventListener("submit", saveTeam);
+      document.querySelector("#add-work").addEventListener("click", () => openWorkEditor());
+      workForm.addEventListener("submit", saveWork);
+      document.querySelector("#auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+      authForm.addEventListener("submit", submitAuth);
+      document.querySelector("#workspace-select").addEventListener("change", async (event) => {
+        try {
+          const workspaceId = event.currentTarget.value;
+          await api("/api/workspaces/switch", { method: "POST", body: JSON.stringify({ workspaceId }) });
+          localStorage.setItem("rostera_workspace_id", workspaceId);
+          await initializeSession();
+        } catch (error) {
+          showError(`Could not switch workspace: ${error.message}`);
+        }
+      });
+      document.querySelector("#create-workspace-button").addEventListener("click", () => document.querySelector("#workspace-dialog").showModal());
+      document.querySelector("#workspace-form").addEventListener("submit", createWorkspace);
+      document.querySelector("#invite-button").addEventListener("click", () => {
+        document.querySelector("#invite-url").hidden = true;
+        document.querySelector("#invite-url").value = "";
+        document.querySelector("#create-invite-button").textContent = "Create invite link";
+        document.querySelector("#invite-dialog").showModal();
+      });
+      document.querySelector("#invite-form").addEventListener("submit", createInvite);
+      document.querySelectorAll("[data-close-dialog]").forEach((button) => button.addEventListener("click", () => button.closest("dialog").close()));
+      document.querySelector("#logout-button").addEventListener("click", async () => {
+        try {
+          await api("/api/auth/logout", { method: "POST", body: JSON.stringify({}) });
+          localStorage.removeItem("rostera_workspace_id");
+          currentUser = null;
+          await initializeSession();
+        } catch (error) {
+          showError(`Could not sign out: ${error.message}`);
+        }
+      });
+      const mobileMenu = document.querySelector(".mobile-menu");
+      const sidebar = document.querySelector(".sidebar");
+      mobileMenu.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("mobile-open");
+        mobileMenu.setAttribute("aria-expanded", String(isOpen));
+        mobileMenu.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+      });
+      sidebar.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", () => {
+          sidebar.classList.remove("mobile-open");
+          mobileMenu.setAttribute("aria-expanded", "false");
+          mobileMenu.setAttribute("aria-label", "Open navigation");
+        });
+      });
+      setTheme("corporate");
+      if (window.location.protocol === "file:") {
+        authForm.hidden = true;
+        document.querySelector("#auth-switch").hidden = true;
+        document.querySelector("#auth-title").textContent = "Open Rostera from its server";
+        document.querySelector("#auth-description").textContent = "Account creation and sign-in need the Rostera backend. This page was opened as a local file instead of from the app server.";
+        const serverLink = document.querySelector("#auth-server-link");
+        serverLink.hidden = false;
+        showAuthError("Start the app with npm run dev if the server is not already running.");
+      } else {
+        initializeSession().catch((error) => showAuthError(`Could not check your session: ${error.message}`));
+      }
+    </script>
+  </body>
+</html>

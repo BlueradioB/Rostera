@@ -1,0 +1,10 @@
+node_modules/
+dist/
+data/
+.playwright/
+test-results/
+playwright-report/
+.env*
+!.env.example
+.vercel/
+npm-debug.log*
