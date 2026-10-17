@@ -7,7 +7,7 @@ test("a new owner creates teams, people, and assigned work", async ({ page }) =>
   await page.getByLabel("Your name").fill("Taylor Brooks");
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill("strong-e2e-password");
-  await page.getByLabel("Workspace name").fill("E2E Garden");
+  await page.locator("#auth-workspace-field input").fill("E2E Garden");
   await page.getByRole("button", { name: "Create account" }).click();
 
   await expect(page.locator("#app-shell")).toBeVisible();
@@ -51,21 +51,22 @@ test("a new owner creates teams, people, and assigned work", async ({ page }) =>
   await expect(page.locator("#assignment-list")).toContainText("Synthesize customer themes");
 });
 
-test("workspace members can read but cannot modify roster data", async ({ page, context }) => {
+test("workspace members can read but cannot modify roster data", async ({ page, browser }) => {
   const ownerEmail = `owner-${Date.now()}@example.test`;
   await page.goto("/");
   await page.getByRole("button", { name: "New to Rostera? Create an account" }).click();
   await page.getByLabel("Your name").fill("Workspace Owner");
   await page.getByLabel("Email").fill(ownerEmail);
   await page.getByLabel("Password").fill("strong-e2e-password");
-  await page.getByLabel("Workspace name").fill("Read Only Garden");
+  await page.locator("#auth-workspace-field input").fill("Read Only Garden");
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.locator("#app-shell")).toBeVisible();
 
   await page.getByRole("button", { name: "Invite" }).click();
   await page.getByRole("button", { name: "Create invite link" }).click();
   const invitationUrl = await page.locator("#invite-url").inputValue();
-  const memberPage = await context.newPage();
+  const memberContext = await browser.newContext();
+  const memberPage = await memberContext.newPage();
   await memberPage.goto(invitationUrl);
   await memberPage.getByRole("button", { name: "New to Rostera? Create an account" }).click();
   await memberPage.getByLabel("Your name").fill("Workspace Member");
@@ -85,4 +86,5 @@ test("workspace members can read but cannot modify roster data", async ({ page, 
   });
   expect(createResult.status).toBe(403);
   expect(createResult.body.error).toContain("Only workspace owners");
+  await memberContext.close();
 });

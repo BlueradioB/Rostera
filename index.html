@@ -661,7 +661,6 @@
         document.querySelector("#focus-label").textContent = text.focus;
         document.querySelector("#growth-nav").textContent = text.growth;
         document.querySelector("#assignments-nav").textContent = text.assignments;
-        document.querySelector("#profile-role").textContent = currentRole === "owner" ? "Workspace owner" : text.steward;
         document.querySelector("#breadcrumb-current").textContent = text.overview;
         const today = new Intl.DateTimeFormat(undefined, { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(new Date());
         const firstName = currentUser?.name.split(/\s+/)[0] || "there";

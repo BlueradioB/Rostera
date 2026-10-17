@@ -1,6 +1,7 @@
 {
   "framework": null,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && mkdir -p public && cp index.html public/index.html && cp -R assets public/assets",
+  "outputDirectory": "public",
   "functions": {
     "api/[...path].ts": {
       "maxDuration": 15
