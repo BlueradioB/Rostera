@@ -412,12 +412,15 @@ async function savePersonSkills(
   personId: string,
   names: string[]
 ): Promise<void> {
-  const normalized = [...new Map(names.map((name) => [name.toLocaleLowerCase(), name])).values()];
-  let skillRows = normalized.length
+  const desiredNames = [...new Map(names.map((name) => [name.trim().toLocaleLowerCase(), name.trim()])).values()]
+    .filter((name) => name.length > 0);
+  const desiredSet = new Set(desiredNames.map((name) => name.toLocaleLowerCase()));
+  let skillRows: Array<{ id: string; name: string }> = desiredNames.length
     ? await query(supabase.from("skills").select("id, name").eq("workspace_id", workspaceId))
     : [];
+  skillRows = skillRows.filter((skill) => desiredSet.has(skill.name.toLocaleLowerCase()));
   const known = new Set(skillRows.map((skill) => skill.name.toLocaleLowerCase()));
-  const missing = normalized.filter((name) => !known.has(name.toLocaleLowerCase()));
+  const missing = desiredNames.filter((name) => !known.has(name.toLocaleLowerCase()));
   if (missing.length) {
     const created = await query(supabase.from("skills").insert(missing.map((name) => ({ workspace_id: workspaceId, name }))).select("id, name"));
     skillRows = [...skillRows, ...created];
@@ -499,7 +502,8 @@ function publicOrigin(request: VercelRequest): string {
   const vercelHost = process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL;
   const host = vercelHost ?? requestHeader(request, "host");
   if (!host) throw new HttpError(400, "The request host is unavailable.");
-  return `https://${host}`;
+  const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+  return host.startsWith("http://") || host.startsWith("https://") ? new URL(host).origin : `${protocol}://${host}`;
 }
 
 async function route(request: VercelRequest, response: VercelResponse): Promise<void> {
