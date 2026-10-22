@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "vercel-build": "npm run build && node scripts/build-vercel.mjs",
     "start": "node dist/src/server.js",
     "dev": "tsx watch src/server.ts",
     "dev:vercel": "npx vercel dev",

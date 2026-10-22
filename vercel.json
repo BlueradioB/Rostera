@@ -1,6 +1,6 @@
 {
   "framework": null,
-  "buildCommand": "npm run build && mkdir -p public && cp index.html public/index.html && cp -R assets public/assets",
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": "public",
   "functions": {
     "api/[...path].ts": {
